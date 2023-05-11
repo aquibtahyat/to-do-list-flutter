@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/to_do.dart';
 
-@immutable
-class AddTodoDialog extends StatelessWidget {
-  final String? title;
-  AddTodoDialog({super.key, this.title = ""});
-  final TextEditingController titlecontroller = TextEditingController();
-  final TextEditingController descriptioncontroller = TextEditingController();
+showAddDialog(BuildContext context, {Function(Todo todo)? callBack, Todo? todo}){
+  return showDialog(context: context, builder:(_){
 
-  @override
-  Widget build(BuildContext context) {
-    // titlecontroller = TextEditingController(text: title);
+    TextEditingController titleController = TextEditingController(text: todo?.title);
+    TextEditingController descriptionController = TextEditingController(text: todo?.description);
+
     return AlertDialog(
       insetPadding: const EdgeInsets.all(35),
       contentPadding: const EdgeInsets.all(20),
@@ -20,7 +17,7 @@ class AddTodoDialog extends StatelessWidget {
               height: 5,
             ),
             TextField(
-              controller: titlecontroller,
+              controller: titleController,
               decoration: const InputDecoration(
                   hintText: 'What To Do?',
                   border: OutlineInputBorder(
@@ -30,7 +27,7 @@ class AddTodoDialog extends StatelessWidget {
               height: 15,
             ),
             TextField(
-              controller: descriptioncontroller,
+              controller: descriptionController,
               maxLength: 50,
               decoration: const InputDecoration(
                   hintText: 'Description',
@@ -43,15 +40,19 @@ class AddTodoDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
-            String title = titlecontroller.text.trim();
-            String description = descriptioncontroller.text.trim();
+            String title = titleController.text.trim();
+            String description = descriptionController.text.trim();
             submit(title, description);
+            if(callBack!=null) {
+              callBack(Todo(title: title, description: description));
+            }
+            Navigator.pop(context);
           },
           child: const Text('Entry'),
         )
       ],
     );
-  }
+  });
 }
 
 void submit(String title, String description) {

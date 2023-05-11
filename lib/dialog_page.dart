@@ -11,7 +11,7 @@ class DialogPage extends StatefulWidget {
 
 class _DialogPageState extends State<DialogPage> {
   List<Todo> todo = List.empty(growable: true);
-  int selectedIndex = -1;
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,10 @@ class _DialogPageState extends State<DialogPage> {
       floatingActionButton: FloatingActionButton.large(
         child: const Icon(Icons.add),
         onPressed: () {
-          AddTodoDialog();
+          showAddDialog(context, callBack: (value) {
+            todo.add(value);
+            setState(() {});
+          });
         },
       ),
     );
@@ -83,9 +86,12 @@ class _DialogPageState extends State<DialogPage> {
             children: [
               InkWell(
                   onTap: () {
-                    AddTodoDialog(
-                      title: todo[index].title,
-                    );
+                    showAddDialog(context, callBack: (value) {
+                      todo[index].description = value.description;
+                      todo[index].title = value.description;
+                      setState(() {
+                      });
+                    }, todo: todo[index]);
                   },
                   child: const Icon(Icons.edit)),
               const SizedBox(
